@@ -155,7 +155,7 @@ def call_llm(prompt: str) -> dict:
     if gemini_key and genai:
         try:
             genai.configure(api_key=gemini_key)
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel("gemini-2.5-flash")
             r = model.generate_content(prompt)
             data = json.loads(_strip(r.text))
             data["provider"] = "Gemini"
