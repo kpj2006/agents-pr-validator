@@ -31,7 +31,7 @@ jobs:
 
       - name: Detect agent
         id: detect
-        run: python3 .github/scripts/detect_agent.py
+        run: python3 scripts/detect_agent.py
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -61,7 +61,7 @@ jobs:
       # Inject .env from secrets — matches .env.example keys automatically
       - name: Inject .env
         working-directory: ${{ needs.detect-agent.outputs.agent_dir }}
-        run: python3 $GITHUB_WORKSPACE/.github/scripts/inject_env.py --env-example .env.example --output .env
+        run: python3 $GITHUB_WORKSPACE/scripts/inject_env.py --env-example .env.example --output .env
         env:
           AGENTVERSE_KEY: ${{ secrets.AGENTVERSE_KEY }}
           AGENT_SECRET_KEY: ${{ secrets.AGENT_SECRET_KEY }}
@@ -84,7 +84,7 @@ jobs:
       # THE CORE: start agent, send real query, judge output
       - name: Run sandbox test
         run: |
-          python3 .github/scripts/sandbox_runner.py \
+          python3 scripts/sandbox_runner.py \
             --agent-dir "${{ needs.detect-agent.outputs.agent_dir }}" \
             --entry-file "${{ needs.detect-agent.outputs.entry_file }}" \
             --output sandbox_result.json
@@ -126,7 +126,7 @@ jobs:
 
       - name: Generate report markdown
         run: |
-          python3 .github/scripts/generate_report.py \
+          python3 scripts/generate_report.py \
             --result-file sandbox_result.json \
             --output-file final_report.md
 
